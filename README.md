@@ -10,3 +10,9 @@ bundle install
 ruby webserver.rb
 ```
 (http://localhost:8000)にアクセス。
+
+
+## 開発環境
+
+- OS:OSX
+- Lang:Ruby 2.1.1
