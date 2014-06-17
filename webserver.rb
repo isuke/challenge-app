@@ -1,6 +1,11 @@
 #!/usr/bin/env ruby
 require 'webrick'
+require 'sqlite3'
 include WEBrick
+include SQLite3
+
+$LOAD_PATH << File.expand_path('../', __FILE__)
+require 'app/models/user'
 
 HTTPServlet::FileHandler.add_handler("erb", HTTPServlet::ERBHandler)
 s = HTTPServer.new(
@@ -9,12 +14,14 @@ s = HTTPServer.new(
 )
 s.config[:MimeTypes]["erb"] = "text/html"
 
+
+User.create_table
+
+
 s.mount_proc('/submit') do |req, res|
   p req.query
-  name       = req.query["name"]
-  email      = req.query["email"]
-  postalcode = req.query["postalcode"]
-  address    = req.query["address"]
+  user = User.new(req.query)
+  user.save
   template = ERB.new( File.read('app/views/submit.erb') )
   res.body << template.result( binding )
 end
