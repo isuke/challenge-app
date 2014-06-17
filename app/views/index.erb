@@ -7,32 +7,46 @@
   </head>
   <body>
     <h1>課題アプリ</h1>
-    <form action="submit" method="post">
+    <h2>登録フォーム</h2>
+    <form action="/" method="post">
       <fieldset>
+        <% if @notice.any? %>
+          <% @notice.each do |n| %>
+            <%= n %>
+          <% end %>
+        <% end %>
         <table>
           <tr>
             <td>名前</td>
             <td>
               <input type="text" name="name" size="40" value=<%= user.name %>>
             </td>
+            <td></td>
+            <td>例)Taro</td>
           </tr>
           <tr>
             <td>Email</td>
             <td>
               <input type="email" name="email" size="40" value=<%= user.email %>>
             </td>
+            <td></td>
+            <td>例)taro@example.com</td>
           </tr>
           <tr>
             <td>郵便番号</td>
             <td>
               <input type="text" name="postalcode" size="40" value=<%= user.postalcode %>>
             </td>
+            <td></td>
+            <td>例)1030000</td>
           </tr>
             <td>住所</td>
             <td>
               <input type="text" name="address" size="40" value=<%= user.address %>>
               </td>
             <td><input type="submit" name="completion" value="入力補助"></td>
+            <td>例)東京都中央区1-1-1</td>
+
           </tr>
         </table>
       </fieldset>
@@ -41,5 +55,23 @@
         <input type="reset" value="リセット">
       </p>
     </form>
+
+    <h2>登録ユーザ(<%= @users.count %>)</h2>
+    <table>
+      <tr>
+        <th>名前</th>
+        <th>Email</th>
+        <th>郵便番号</th>
+        <th>住所</th>
+      </tr>
+      <% @users.each do |u| %>
+        <tr>
+          <td><%= u.name %></td>
+          <td><%= u.email %></td>
+          <td><%= u.postalcode %></td>
+          <td><%= u.address %></td>
+        </tr>
+      <% end %>
+    </table>
   </body>
 </html>

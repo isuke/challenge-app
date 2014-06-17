@@ -13,12 +13,16 @@ s = HTTPServer.new(
 )
 s.config[:MimeTypes]["erb"] = "text/html"
 
-
-
 def submit(req)
-  user = User.new(req.query)
-  user.save
-  template = ERB.new( File.read('app/views/submit.erb') )
+  begin
+    user = User.new(req.query)
+    user.save
+    @users << user
+    @notice << "保存しました。"
+  rescue => e
+    @notice << e.message
+  end
+  template = ERB.new( File.read('app/views/index.erb') )
   template.result( binding )
 end
 
@@ -47,22 +51,25 @@ def encode!(hash, code="UTF-8")
   hash
 end
 
-s.mount_proc('/') do |req, res|
+def index (req)
   user = User.new
   template = ERB.new( File.read('app/views/index.erb') )
-  res.body << template.result( binding )
+  template.result( binding )
 end
 
-s.mount_proc('/submit') do |req, res|
+s.mount_proc('/') do |req, res|
   encode!(req.query)
-
   p req.query
+
+  @notice = Array.new
+  @users = User.find_all
+
   if req.query['send']
     res.body << submit(req)
   elsif req.query['completion']
     res.body << complation(req)
   else
-    raise "error"
+    res.body << index(req)
   end
 end
 
