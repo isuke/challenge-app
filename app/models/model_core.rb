@@ -1,3 +1,5 @@
+require_relative 'validator'
+
 class ModelCore
   DB_PATH  = 'db/production.db'
 
