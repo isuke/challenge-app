@@ -22,7 +22,7 @@ class Validator
 
   # 正規表現に一致しない場合例外
   def format(reg)
-    if @item.nil? or @item.empty? or not @item =- reg
+    if @item.nil? and @item.empty? and not @item =~ reg
       raise "format error"
     end
   end

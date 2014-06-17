@@ -1,3 +1,6 @@
+require 'sqlite3'
+include SQLite3
+
 require_relative 'validator'
 
 class ModelCore

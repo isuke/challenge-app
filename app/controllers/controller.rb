@@ -1,11 +1,6 @@
-#!/usr/bin/env ruby
 require 'webrick'
-require 'sqlite3'
 include WEBrick
-include SQLite3
 
-$LOAD_PATH << File.expand_path('../', __FILE__)
-require 'app/models/user'
 
 HTTPServlet::FileHandler.add_handler("erb", HTTPServlet::ERBHandler)
 s = HTTPServer.new(
@@ -13,9 +8,6 @@ s = HTTPServer.new(
  DocumentRoot: File.join(Dir::pwd, "app/views")
 )
 s.config[:MimeTypes]["erb"] = "text/html"
-
-
-User.create_table
 
 
 s.mount_proc('/submit') do |req, res|
