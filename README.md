@@ -7,6 +7,6 @@
 
 ```
 bundle install
-ruby webserber.com
+ruby webserber.rb
 ```
 (http://localhost:8000)にアクセス。
