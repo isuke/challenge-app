@@ -83,3 +83,5 @@ class User < ModelCore
     end
 
 end
+
+User.create_table
