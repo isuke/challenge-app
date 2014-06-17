@@ -40,6 +40,13 @@ def correct_postal_code_format?(postalcode)
   postalcode =~ /^[0-9]{7}$/
 end
 
+def encode!(hash, code="UTF-8")
+  hash.each do |k,v|
+    hash[k] = v.force_encoding(code)
+  end
+  hash
+end
+
 s.mount_proc('/') do |req, res|
   user = User.new
   template = ERB.new( File.read('app/views/index.erb') )
@@ -47,6 +54,8 @@ s.mount_proc('/') do |req, res|
 end
 
 s.mount_proc('/submit') do |req, res|
+  encode!(req.query)
+
   p req.query
   if req.query['send']
     res.body << submit(req)
