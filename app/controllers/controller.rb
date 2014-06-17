@@ -12,7 +12,7 @@ class Controller < WEBrick::HTTPServlet::AbstractServlet
     @notice = Array.new
     @users = User.find_all
 
-    user = User.new
+    @user = User.new
     template = ERB.new( File.read('app/views/index.erb') )
     res.body << template.result( binding )
   end
@@ -24,7 +24,7 @@ class Controller < WEBrick::HTTPServlet::AbstractServlet
     @notice = Array.new
     @users = User.find_all
 
-    if req.query['send']
+    if req.query['regist']
       res.body << submit(req)
     elsif req.query['completion']
       res.body << complation(req)
@@ -35,10 +35,11 @@ class Controller < WEBrick::HTTPServlet::AbstractServlet
 
     def submit(req)
       begin
-        user = User.new(req.query)
-        user.save
-        @users << user
+        @user = User.new(req.query)
+        @user.save
+        @users << @user
         @notice << "保存しました。"
+        @user = User.new # 入力フォームを初期化
       rescue => e
         @notice << e.message
       end
@@ -47,10 +48,10 @@ class Controller < WEBrick::HTTPServlet::AbstractServlet
     end
 
     def complation(req)
-      user = User.new(req.query)
-      if correct_postal_code_format?(user.postalcode)
-        doc = Nokogiri::XML(open(POSTALCODE_API_PATH + user.postalcode))
-        user.address = extract_address_from(doc)
+      @user = User.new(req.query)
+      if correct_postal_code_format?(@user.postalcode)
+        doc = Nokogiri::XML(open(POSTALCODE_API_PATH + @user.postalcode))
+        @user.address = extract_address_from(doc)
       end
       template = ERB.new( File.read('app/views/index.erb') )
       template.result( binding )
